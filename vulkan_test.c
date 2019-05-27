@@ -1,31 +1,39 @@
+#include <stdio.h>
+
 __declspec(dllimport) void *LoadLibraryA(char *);
 __declspec(dllimport) void *GetProcAddress(void *, char *);
-__declspec(dllimport) int   MessageBoxA(void *, char *, char *, unsigned);
 
-#define REPORT(code, msg)                                         \
-    do {                                                          \
-        MessageBoxA(0, msg, code ? "Failure" : "Success", 0);     \
-        return code;                                              \
-    } while (0)
-
-int
-WinMainCRTStartup(void)
+int main()
 {
     void *vk = LoadLibraryA("vulkan-1.dll");
     if (!vk)
-        REPORT(-1, "Vulkan drivers not installed.");
-    void *(*vkGetInstanceProcAddr)(void *, const char *) =
-        GetProcAddress(vk, "vkGetInstanceProcAddr");
+	{
+		printf("Vulkan drivers not installed.");
+		return -1;
+	}
+
+    void *(*vkGetInstanceProcAddr)(void *, const char *) = GetProcAddress(vk, "vkGetInstanceProcAddr");
     if (!vkGetInstanceProcAddr)
-        REPORT(-1, "Vulkan is malfunctioning (vkGetInstanceProcAddr).");
-    int (*vkCreateInstance)(int *, void *, void **) =
-        vkGetInstanceProcAddr(0, "vkCreateInstance");
+	{
+		printf("Vulkan is malfunctioning (vkGetInstanceProcAddr).");
+		return 3;
+	}
+
+    int (*vkCreateInstance)(int *, void *, void **) = vkGetInstanceProcAddr(0, "vkCreateInstance");
     if (!vkCreateInstance)
-        REPORT(-1, "Vulkan is malfunctioning (vkCreateInstance)");
+	{
+		printf("Vulkan is malfunctioning (vkCreateInstance)");
+		return 2;
+	}
+	
     void *instance = 0;
     int result = vkCreateInstance((int[16]){1}, 0, &instance);
     if (!instance || result != 0)
-        REPORT(-1, "Vulkan drivers installed and functioning "
-               "but are incompatible. An instance could not be created.");
-    REPORT(0, "Successfully created a Vulkan instance.");
+    {
+		printf("Vulkan drivers installed and functioning but are incompatible. An instance could not be created.");
+		return 1;
+	}
+	
+    printf("Successfully created a Vulkan instance.");
+	return 0;
 }

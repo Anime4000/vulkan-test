@@ -4,7 +4,7 @@ LDFLAGS = -nostdlib -mwindows
 LDLIBS  = -lkernel32 -luser32
 
 vulkan_test.exe : vulkan_test.c
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(CC) $(CFLAGS) -o $@ $^ 
 
 clean :
 	$(RM) vulkan_test.exe

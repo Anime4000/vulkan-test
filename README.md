@@ -1,10 +1,16 @@
 # World's Smallest Vulkan Compatability Test
 
-Download: [vulkan_test.exe](https://github.com/skeeto/vulkan-test/releases/download/1.0.2/vulkan_test.exe)
-
 This tiny program checks if your Windows system is capable of creating
 a Vulkan instance. If not, it will give a hint as to why (missing
 drivers, malfunctioning drivers, incompatible drivers).
 
-This began as my initial foray into Vulkan, only to disappoint me that
-my hardware isn't supported.
+# Error Return Code
+You can intergrate this mini program into your application
+and capture `vulkan_test.exe` return code.
+
+## Return Code:
+* -1: Vulkan API not installed, unsupported GPU.
+*  0: Vulkan API is available
+*  1: Vulkan drivers installed and functioning but are incompatible. An instance could not be created.
+*  2: Vulkan is malfunctioning (vkCreateInstance)
+*  3: Vulkan is malfunctioning (vkGetInstanceProcAddr).
